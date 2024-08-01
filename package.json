@@ -1,0 +1,55 @@
+{
+  "name": "@okeeffed/postman-tools",
+  "description": "Helper tools to generate Postman collections and environments",
+  "main": "dist/main.mjs",
+  "type": "module",
+  "version": "0.0.1",
+  "author": "Dennis O'Keeffe",
+  "license": "CC-BY-NC-4.0",
+  "files": [
+    "dist/*.js",
+    "dist/*.d.ts",
+    "dist/*.mjs"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "postman-tools": "dist/main.mjs"
+  },
+  "scripts": {
+    "dev": "npx tsx src/main.ts",
+    "build": "tsup --format esm --clean --minify",
+    "build:publish": "npm run build && npm publish --access public",
+    "test": "jest",
+    "seed": "tsx seed.ts",
+    "bootstrap": "bin/bootstrap.sh"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.30",
+    "@types/prettier": "^2.7.3",
+    "@types/prompts": "^2.4.9",
+    "@types/uuid": "^10.0.0",
+    "cosmiconfig-typescript-loader": "^5.0.0",
+    "jest": "29.7.0",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8.0.2",
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "@commander-js/extra-typings": "^12.0.1",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "cosmiconfig": "^9.0.0",
+    "es-toolkit": "^1.13.1",
+    "prompts": "^2.4.2",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  }
+}
