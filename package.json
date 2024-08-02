@@ -1,7 +1,7 @@
 {
   "name": "@okeeffed/postman-tools",
   "description": "Helper tools to generate Postman collections and environments",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "dist/index.js",
   "module": "./dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -28,8 +28,7 @@
     "build:publish": "npm run build && npm publish --access public",
     "test": "jest",
     "seed": "tsx seed.ts",
-    "bootstrap": "bin/bootstrap.sh",
-    "bundle:types": "rollup -c rollup.config.mjs"
+    "bootstrap": "bin/bootstrap.sh"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",

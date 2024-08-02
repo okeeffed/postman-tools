@@ -1,24 +1,46 @@
-export const SIMPLE_INIT = `import type { PostmanConfiguration } from "@okeeffed/postman-tools";
+export const SIMPLE_INIT = `import type { PostmanConfiguration } from "./src/types";
 
-const environments = ["dev"] as const;
+const stages = ["dev", "stage", "sandbox", "prod"] as const;
 
 export default {
-  name: "Example environment",
-  environments,
-  values: [
-    {
-      key: "example",
-      type: "default",
-      default: "default",
-      dev: "dev",
+  stages,
+  environment: {
+    name: "Example environment",
+    values: [
+      {
+        key: "example",
+        type: "default",
+        default: "default",
+        dev: "dev",
+        stage: "stage",
+        sandbox: "sandbox",
+        prod: "prod 2",
+      },
+      {
+        key: "secret",
+        type: "secret",
+        default: "this is a secret",
+      },
+    ],
+  },
+  collection: {
+    spec: "tmp/swagger.json",
+    headers: {
+      "x-correlation-id": "{{$guid}}",
+      "x-api-key": "{{API_KEY}}",
     },
-    {
-      key: "secret",
-      type: "secret",
-      default: "this is a secret",
+    auth: {
+      type: "bearer",
+      bearer: [
+        {
+          key: "token",
+          value: "{{BEARER_TOKEN}}",
+          type: "string",
+        },
+      ],
     },
-  ],
-} satisfies PostmanConfiguration<typeof environments>;
+  },
+} satisfies PostmanConfiguration<typeof stages>;
 `;
 
 export const CONFIG_FILENAME = `.postmanrc.ts`;

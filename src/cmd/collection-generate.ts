@@ -64,9 +64,8 @@ export const collectionGenerate = new Command("collection:generate")
               options.output ?? "postman.collection.json",
               JSON.stringify(postmanCollection, null, 2)
             );
-            console.log("Conversion successful");
           } else {
-            console.log("Could not convert", result.reason);
+            logger.error("FAILED", result.reason);
           }
         }
       }
