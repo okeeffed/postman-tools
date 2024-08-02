@@ -67,3 +67,4 @@ INFO Finished generating environment variables JSON files
 
 - [ ] Clean up repo configuration for build
 - [ ] Set some standard generator files
+- [ ] Automate releases with GitHub actions
