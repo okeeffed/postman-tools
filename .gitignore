@@ -178,3 +178,7 @@ tmp
 
 # Ignore Docker created files
 volume
+
+# Postman collections
+*.env.json
+*.collection.json

@@ -1,12 +1,12 @@
 // configLoader.ts
 import { cosmiconfig } from "cosmiconfig";
 
-import { PostmanEnvironmentConfigurationSchema } from "@/schema";
-import type { PostmanEnvironmentConfiguration } from "@/types";
+import { PostmanConfigurationSchema } from "@/schema";
+import type { PostmanConfiguration } from "@/types";
 import { TypeScriptLoader } from "cosmiconfig-typescript-loader";
 
 export async function loadConfig<T extends readonly string[]>(): Promise<
-  PostmanEnvironmentConfiguration<T>
+  PostmanConfiguration<T>
 > {
   const explorer = cosmiconfig("postman", {
     loaders: {
@@ -22,7 +22,7 @@ export async function loadConfig<T extends readonly string[]>(): Promise<
     }
 
     // Ensure environments is an array
-    const environments = result.config.environments;
+    const environments = result.config.stages;
     if (!Array.isArray(environments) || environments.length === 0) {
       throw new Error("No environments defined in configuration.");
     }
@@ -31,11 +31,10 @@ export async function loadConfig<T extends readonly string[]>(): Promise<
     const environmentsTyped = environments as unknown as T;
 
     // Create schema with inferred environment types
-    const schemaParser =
-      PostmanEnvironmentConfigurationSchema(environmentsTyped);
+    const schemaParser = PostmanConfigurationSchema(environmentsTyped);
     const config = schemaParser.parse(result.config);
 
-    return config as unknown as PostmanEnvironmentConfiguration<T>;
+    return config as unknown as PostmanConfiguration<T>;
   } catch (error) {
     console.error("Error loading configuration:", error);
     throw error;

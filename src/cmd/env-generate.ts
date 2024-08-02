@@ -15,7 +15,7 @@ import path from "node:path";
 
 export const envGenerate = new Command("env:generate")
   .description(
-    "Generates a collection of Postman environments based on your configuration file"
+    "Generates a set of Postman environments based on your configuration file"
   )
   // TODO: Support project overrides
   // .option("-p, --project <name>", "Project name")
@@ -28,20 +28,20 @@ export const envGenerate = new Command("env:generate")
 
     logger.log("INFO", "Generating environment variables...");
 
-    for (const environment of config.environments) {
-      const environmentValues = config.values.map((envValues) =>
-        generateVariableSetForEnvironment(environment, envValues)
+    for (const stage of config.stages) {
+      const environmentValues = config.environment.values.map((envValues) =>
+        generateVariableSetForEnvironment(stage, envValues)
       );
 
       const output: PostmanEnvironmentFile = {
         id: v4(),
-        name: `${config.name} (${environment})`,
+        name: `${config.environment.name} (${stage})`,
         values: environmentValues,
       };
 
       const filename = path.join(
         process.cwd(),
-        `${camelCase(config.name)}.${environment}.env.json`
+        `${camelCase(config.environment.name)}.${stage}.env.json`
       );
       await writeFile(filename, JSON.stringify(output, null, 2));
       logger.log("GENERATED", filename);

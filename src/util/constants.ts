@@ -1,4 +1,4 @@
-export const SIMPLE_INIT = `import type { PostmanEnvironmentConfiguration } from "@okeeffed/postman-tools";
+export const SIMPLE_INIT = `import type { PostmanConfiguration } from "@okeeffed/postman-tools";
 
 const environments = ["dev"] as const;
 
@@ -18,7 +18,7 @@ export default {
       default: "this is a secret",
     },
   ],
-} satisfies PostmanEnvironmentConfiguration<typeof environments>;
+} satisfies PostmanConfiguration<typeof environments>;
 `;
 
 export const CONFIG_FILENAME = `.postmanrc.ts`;

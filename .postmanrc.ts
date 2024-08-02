@@ -1,24 +1,43 @@
-import type { PostmanEnvironmentConfiguration } from "./src/types";
+import type { PostmanConfiguration } from "./src/types";
 
-const environments = ["dev", "stage", "sandbox", "prod"] as const;
+const stages = ["dev", "stage", "sandbox", "prod"] as const;
 
 export default {
-  name: "Example environment",
-  environments,
-  values: [
-    {
-      key: "example",
-      type: "default",
-      default: "default",
-      dev: "dev",
-      stage: "stage",
-      sandbox: "sandbox",
-      prod: "prod 2",
+  stages,
+  environment: {
+    name: "Example environment",
+    values: [
+      {
+        key: "example",
+        type: "default",
+        default: "default",
+        dev: "dev",
+        stage: "stage",
+        sandbox: "sandbox",
+        prod: "prod 2",
+      },
+      {
+        key: "secret",
+        type: "secret",
+        default: "this is a secret",
+      },
+    ],
+  },
+  collection: {
+    spec: "tmp/swagger.json",
+    headers: {
+      "x-correlation-id": "{{$guid}}",
+      "x-api-key": "{{API_KEY}}",
     },
-    {
-      key: "secret",
-      type: "secret",
-      default: "this is a secret",
+    auth: {
+      type: "bearer",
+      bearer: [
+        {
+          key: "token",
+          value: "{{BEARER_TOKEN}}",
+          type: "string",
+        },
+      ],
     },
-  ],
-} satisfies PostmanEnvironmentConfiguration<typeof environments>;
+  },
+} satisfies PostmanConfiguration<typeof stages>;

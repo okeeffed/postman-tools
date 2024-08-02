@@ -1,48 +1,125 @@
 import { z } from "zod";
+import { PostmanItem } from "@/types";
 
-// Define a Zod schema for EnvironmentValue
-const EnvironmentValueSchema = z.object({
+// Define and export the EnvironmentValue schema
+export const EnvironmentValueSchema = z.object({
   key: z.string(),
   value: z.string(),
   type: z.enum(["default", "secret"]),
-  enabled: z.literal(true), // Ensure enabled is always true
+  enabled: z.literal(true),
 });
 
-// Define a Zod schema for PostmanEnvironmentVariable
-function PostmanEnvironmentVariableSchema<T extends readonly string[]>(
-  environments: T
+// Define and export the PostmanEnvironmentVariable schema
+export function PostmanEnvironmentVariableSchema<T extends readonly string[]>(
+  stages: T
 ) {
-  return z
-    .object({
-      key: z.string(),
-      type: z.enum(["default", "secret"]),
-      default: z.string(),
-    })
-    .extend(
-      environments.reduce((acc, env) => {
-        acc[env] = z.string().optional();
-        return acc;
-      }, {} as Record<string, z.ZodOptional<z.ZodString>>)
-    );
+  return z.object({
+    key: EnvironmentValueSchema.shape.key,
+    type: EnvironmentValueSchema.shape.type,
+    default: z.string(),
+    ...Object.fromEntries(
+      stages.map((stage) => [stage, z.string().optional()])
+    ),
+  });
 }
 
-// Define a Zod schema for PostmanEnvironmentFile
+// Define and export the PostmanEnvironmentFile schema
 export const PostmanEnvironmentFileSchema = z.object({
   id: z.string(),
   name: z.string(),
   values: z.array(EnvironmentValueSchema),
 });
 
+// Define and export the PostmanEnvironmentConfiguration schema
 export function PostmanEnvironmentConfigurationSchema<
   T extends readonly string[]
->(environments: T) {
-  // Map environments to an array of ZodLiteral<string>
-  const environmentLiterals = environments.map((env) => z.literal(env));
+>(stages: T) {
   return z.object({
     name: z.string(),
-    environments: z.tuple(
-      environmentLiterals as [z.ZodLiteral<any>, ...z.ZodLiteral<any>[]]
-    ), // Ensure environments match the provided array
-    values: z.array(PostmanEnvironmentVariableSchema(environments)),
+    values: z.array(PostmanEnvironmentVariableSchema(stages)),
   });
 }
+
+// Define and export the PostmanCollectionConfiguration schema
+export const PostmanCollectionConfigurationSchema = z.object({
+  spec: z.string(),
+  headers: z.record(z.string()).optional(),
+  auth: z
+    .object({
+      type: z.literal("bearer"),
+      bearer: z.array(
+        z.object({
+          key: z.string(),
+          value: z.string(),
+          type: z.string(),
+        })
+      ),
+    })
+    .optional(),
+});
+
+// Define and export the PostmanConfiguration schema
+export function PostmanConfigurationSchema<T extends readonly string[]>(
+  stages: T
+) {
+  return z.object({
+    stages: z.array(z.string()).refine(
+      (array) => {
+        return array.every((stage) => stages.includes(stage));
+      },
+      {
+        message: "Stage must be one of the predefined stages",
+      }
+    ),
+    environment: PostmanEnvironmentConfigurationSchema(stages),
+    collection: PostmanCollectionConfigurationSchema,
+  });
+}
+
+// Define and export the PostmanItem schema
+export const PostmanItemSchema: z.ZodType<PostmanItem> = z.lazy(() =>
+  z.object({
+    request: z
+      .object({
+        url: z
+          .object({
+            query: z
+              .array(
+                z.object({
+                  key: z.string(),
+                  value: z.string(),
+                })
+              )
+              .optional(),
+          })
+          .optional(),
+        header: z
+          .array(
+            z.object({
+              key: z.string(),
+              value: z.string(),
+            })
+          )
+          .optional(),
+        auth: z
+          .object({
+            type: z.literal("bearer"),
+            bearer: z.array(
+              z.object({
+                key: z.string(),
+                value: z.string(),
+                type: z.string(),
+              })
+            ),
+          })
+          .optional(),
+      })
+      .optional(),
+    item: z.array(PostmanItemSchema).optional(),
+  })
+);
+
+// Define and export the PostmanCollection schema
+export const PostmanCollectionSchema = z.object({
+  item: z.array(PostmanItemSchema).optional(),
+});

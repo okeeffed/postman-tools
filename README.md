@@ -21,7 +21,7 @@ $ npx @okeeffed/postman-tools --help
 Setup a configuration file. Here is an example:
 
 ```ts
-import type { PostmanEnvironmentConfiguration } from "@okeeffed/postman-tools";
+import type { PostmanConfiguration } from "@okeeffed/postman-tools";
 
 const environments = ["dev", "stage", "sandbox", "prod"] as const;
 
@@ -44,7 +44,7 @@ export default {
       default: "this is a secret",
     },
   ],
-} satisfies PostmanEnvironmentConfiguration<typeof environments>;
+} satisfies PostmanConfiguration<typeof environments>;
 ```
 
 Run a test to generate the environment configurations:
