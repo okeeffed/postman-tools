@@ -1,32 +1,35 @@
 {
   "name": "@okeeffed/postman-tools",
   "description": "Helper tools to generate Postman collections and environments",
-  "main": "dist/main.mjs",
-  "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.7",
+  "main": "dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "dist/index.d.ts",
   "author": "Dennis O'Keeffe",
   "license": "CC-BY-NC-4.0",
   "files": [
     "dist/*.js",
-    "dist/*.d.ts",
-    "dist/*.mjs"
+    "dist/*.mjs",
+    "dist/**/*.d.ts"
   ],
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "bin": {
-    "postman-tools": "dist/main.mjs"
+    "postman-tools": "dist/main.js"
   },
   "scripts": {
     "dev": "npx tsx src/main.ts",
-    "build": "tsup --format esm --clean --minify",
+    "build": "tsup",
     "build:publish": "npm run build && npm publish --access public",
     "test": "jest",
     "seed": "tsx seed.ts",
-    "bootstrap": "bin/bootstrap.sh"
+    "bootstrap": "bin/bootstrap.sh",
+    "bundle:types": "rollup -c rollup.config.mjs"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
@@ -44,7 +47,7 @@
   },
   "dependencies": {
     "@commander-js/extra-typings": "^12.0.1",
-    "chalk": "^5.3.0",
+    "chalk": "^4.1.2",
     "commander": "^12.0.0",
     "cosmiconfig": "^9.0.0",
     "es-toolkit": "^1.13.1",

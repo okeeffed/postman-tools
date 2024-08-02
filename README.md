@@ -62,3 +62,8 @@ GENERATED .../exampleEnvironment.sandbox.env.json
 GENERATED .../exampleEnvironment.prod.env.json
 INFO Finished generating environment variables JSON files
 ```
+
+## Repo todo
+
+- [ ] Clean up repo configuration for build
+- [ ] Set some standard generator files
