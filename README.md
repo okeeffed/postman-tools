@@ -7,8 +7,10 @@ Useful for drag-and-drop updates when you don't have an API Key available to you
 ## Roadmap
 
 - [x] Generate environments
-- [ ] Generate collections from Swagger files
-- [ ] Initialize configuration file
+- [x] Generate collections from Swagger files
+- [x] Initialize configuration file
+- [ ] Support specific overrides
+- [ ] Support switching off query variables across all endpoints by default
 
 ## Getting started
 
@@ -34,35 +36,39 @@ export default {
         key: "example",
         type: "default",
         default: "default",
-        dev: "dev",
-        stage: "stage",
-        sandbox: "sandbox",
-        prod: "prod 2",
+        dev: "dev-only-env-value",
+        stage: "stage-only-env-value",
+        sandbox: "sandbox-only-env-value",
+        prod: "prod-only-env-value",
       },
       {
         key: "secret",
         type: "secret",
-        default: "this is a secret",
+        default: "this is a secret value",
       },
     ],
   },
-  collection: {
-    in: "openapi.json",
-    headers: {
-      "x-correlation-id": "{{$guid}}",
-      "x-api-key": "{{API_KEY}}",
+  collection: [
+    {
+      in: "tmp/swagger-alt.json",
+      out: "postman.collection.json",
+      baseUrl: "{{URL}}",
+      headers: {
+        "x-correlation-id": "{{$guid}}",
+        "x-api-key": "{{API_KEY}}",
+      },
+      auth: {
+        type: "bearer",
+        bearer: [
+          {
+            key: "token",
+            value: "{{BEARER_TOKEN}}",
+            type: "string",
+          },
+        ],
+      },
     },
-    auth: {
-      type: "bearer",
-      bearer: [
-        {
-          key: "token",
-          value: "{{BEARER_TOKEN}}",
-          type: "string",
-        },
-      ],
-    },
-  },
+  ],
 } satisfies PostmanConfiguration<typeof stages>;
 ```
 
@@ -72,10 +78,10 @@ Run a test to generate the environment configurations:
 $ npx @okeeffed/postman-tools env:generate
 
 INFO Generating environment variables...
-GENERATED .../exampleEnvironment.dev.env.json
-GENERATED .../exampleEnvironment.stage.env.json
-GENERATED .../exampleEnvironment.sandbox.env.json
-GENERATED .../exampleEnvironment.prod.env.json
+GENERATED /.../exampleEnvironment.dev.env.json
+GENERATED /.../exampleEnvironment.stage.env.json
+GENERATED /.../exampleEnvironment.sandbox.env.json
+GENERATED /.../exampleEnvironment.prod.env.json
 INFO Finished generating environment variables JSON files
 ```
 
@@ -85,8 +91,30 @@ For generating a Postman collection.
 $ npx @okeeffed/postman-tools env:generate
 
 INFO Generating Postman collection...
-INFO Finished generating environment variables JSON files
+GENERATED postman.collection.json
 ```
+
+## Configuration
+
+There are three top-level configuration options:
+
+| Options     | Does                                                              |
+| ----------- | ----------------------------------------------------------------- |
+| stages      | Defines the different stage environments you need to support      |
+| environment | Object for defining different environment configurations          |
+| collection  | Array of objects for supporting multiple OpenAPI spec input files |
+
+Things to note:
+
+- Define `stages` as a const e.g. `["dev"] as const` to get the type benefits within the configuration.
+- `environment.values` object relies on the stages type. If you define `dev` as a stage, it will be available as a key for a "dev" environment value override.
+- For `collection[number]`, you should define a different `in` and `out` file.
+
+## Caveats
+
+The override configurations (e.g. headers, auth) will apply **to all** endpoints.
+
+I will consider making this more flexible (with likely breaking changes), but for now you are best configuring it with the overrides that are likely necessary for each endpoint.
 
 ## Repo todo
 
