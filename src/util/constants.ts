@@ -1,4 +1,4 @@
-export const SIMPLE_INIT = `import type { PostmanConfiguration } from "./src/types";
+export const SIMPLE_INIT = `import type { PostmanConfiguration } from "@okeeffed/postman-tools";
 
 const stages = ["dev", "stage", "sandbox", "prod"] as const;
 
@@ -11,10 +11,10 @@ export default {
         key: "example",
         type: "default",
         default: "default",
-        dev: "dev",
-        stage: "stage",
-        sandbox: "sandbox",
-        prod: "prod 2",
+        dev: "dev-only-env-value",
+        stage: "stage-only-env-value",
+        sandbox: "sandbox-only-env-value",
+        prod: "prod-only-env-value",
       },
       {
         key: "secret",

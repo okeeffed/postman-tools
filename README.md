@@ -9,8 +9,9 @@ Useful for drag-and-drop updates when you don't have an API Key available to you
 - [x] Generate environments
 - [x] Generate collections from Swagger files
 - [x] Initialize configuration file
-- [ ] Support specific overrides
-- [ ] Support switching off query variables across all endpoints by default
+- [ ] Support multi-environment configurations.
+- [ ] Support more overrides.
+- [ ] Support switching off query variables across all endpoints by default.
 
 ## Getting started
 
@@ -20,7 +21,15 @@ $ npm i -D @okeeffed/postman-tools
 $ npx @okeeffed/postman-tools --help
 ```
 
-Setup a configuration file. Here is an example:
+Setup a configuration file.
+
+```s
+$ npx @okeeffed/postman-tools init
+INFO Attempting to initialise
+CREATED .../.postmanrc.ts
+```
+
+An example configuration:
 
 ```ts
 import type { PostmanConfiguration } from "./src/types";
