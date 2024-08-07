@@ -12,6 +12,7 @@ Useful for drag-and-drop updates when you don't have an API Key available to you
 - [ ] Support multi-environment configurations.
 - [ ] Support more overrides.
 - [ ] Support switching off query variables across all endpoints by default.
+- [ ] Support scripts.
 
 ## Getting started
 
