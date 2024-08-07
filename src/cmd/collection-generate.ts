@@ -85,13 +85,14 @@ const addDefaultHeaders = (
   item: PostmanItem,
   collection: PostmanCollectionConfiguration
 ) => {
-  if (item.request && item.request.header) {
-    // Check if header exists
-    if (collection.headers) {
+  if (item.request) {
+    if (item.request.header && collection.headers) {
       const entries = Object.entries(collection.headers);
 
       for (const [key, value] of entries) {
-        const header = item.request.header.find((h) => h.key === key);
+        const header = item.request.header.find(
+          (h: Record<string, string>) => h.key === key
+        );
         if (header) {
           header.value = value;
         } else {
@@ -107,10 +108,20 @@ const addDefaultHeaders = (
       // Set Bearer Token auth
       item.request.auth = collection.auth;
     }
+
+    if (collection.baseUrl) {
+      // Override the baseUrl host
+      item.request.url = {
+        ...item.request.url,
+        host: [collection.baseUrl],
+      };
+    }
   }
 
   // Recursively process nested items
   if (item.item && Array.isArray(item.item)) {
-    item.item.forEach((item) => addDefaultHeaders(item, collection));
+    item.item.forEach((item: PostmanItem) =>
+      addDefaultHeaders(item, collection)
+    );
   }
 };

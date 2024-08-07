@@ -1,6 +1,10 @@
 // src/types/index.ts
 import { z } from "zod";
-import { authSchema } from "./postman-collection-schema";
+import {
+  authSchema,
+  collectionSchema,
+  itemSchema,
+} from "./postman-collection-schema";
 
 export interface EnvironmentValue {
   key: string;
@@ -43,6 +47,15 @@ export interface PostmanCollectionConfiguration {
   out: string;
 
   /**
+   * Overrides the collections baseUrl value generated
+   * via the OpenAPI spec. Useful when wanting to use
+   * customer environment variables.
+   *
+   * @example {{BASE_URL}}
+   */
+  baseUrl?: string;
+
+  /**
    * Overrides for the collection headers
    */
   headers?: {
@@ -67,23 +80,5 @@ export interface PostmanConfiguration<T extends readonly string[]> {
     | Array<PostmanCollectionConfiguration>;
 }
 
-export interface PostmanItem {
-  request?: {
-    url?: {
-      query?: Array<{
-        key: string;
-        value: string;
-      }>;
-    };
-    header?: Array<{
-      key: string;
-      value: string;
-    }>;
-    auth?: z.infer<typeof authSchema>;
-  };
-  item?: PostmanItem[];
-}
-
-export interface PostmanCollection {
-  item?: PostmanItem[];
-}
+export type PostmanItem = z.infer<typeof itemSchema>;
+export type PostmanCollection = z.infer<typeof collectionSchema>;

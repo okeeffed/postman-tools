@@ -27,6 +27,7 @@ export default {
     {
       in: "tmp/swagger-alt.json",
       out: "postman.collection.json",
+      baseUrl: "{{URL}}",
       headers: {
         "x-correlation-id": "{{$guid}}",
         "x-api-key": "{{API_KEY}}",
