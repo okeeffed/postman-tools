@@ -23,21 +23,24 @@ export default {
       },
     ],
   },
-  collection: {
-    spec: "tmp/swagger.json",
-    headers: {
-      "x-correlation-id": "{{$guid}}",
-      "x-api-key": "{{API_KEY}}",
+  collection: [
+    {
+      in: "tmp/swagger-alt.json",
+      out: "postman.collection.json",
+      headers: {
+        "x-correlation-id": "{{$guid}}",
+        "x-api-key": "{{API_KEY}}",
+      },
+      auth: {
+        type: "bearer",
+        bearer: [
+          {
+            key: "token",
+            value: "{{BEARER_TOKEN}}",
+            type: "string",
+          },
+        ],
+      },
     },
-    auth: {
-      type: "bearer",
-      bearer: [
-        {
-          key: "token",
-          value: "{{BEARER_TOKEN}}",
-          type: "string",
-        },
-      ],
-    },
-  },
+  ],
 } satisfies PostmanConfiguration<typeof stages>;

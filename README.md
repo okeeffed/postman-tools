@@ -47,7 +47,7 @@ export default {
     ],
   },
   collection: {
-    spec: "openapi.json",
+    in: "openapi.json",
     headers: {
       "x-correlation-id": "{{$guid}}",
       "x-api-key": "{{API_KEY}}",

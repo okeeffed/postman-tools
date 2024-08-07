@@ -4,6 +4,7 @@ import { cosmiconfig } from "cosmiconfig";
 import { PostmanConfigurationSchema } from "@/schema";
 import type { PostmanConfiguration } from "@/types";
 import { TypeScriptLoader } from "cosmiconfig-typescript-loader";
+import { logger } from "@/util/logger";
 
 export async function loadConfig<T extends readonly string[]>(): Promise<
   PostmanConfiguration<T>
@@ -32,9 +33,18 @@ export async function loadConfig<T extends readonly string[]>(): Promise<
 
     // Create schema with inferred environment types
     const schemaParser = PostmanConfigurationSchema(environmentsTyped);
-    const config = schemaParser.parse(result.config);
+    const config = schemaParser.safeParse(result.config);
 
-    return config as unknown as PostmanConfiguration<T>;
+    if (!config.success) {
+      for (const issue of config.error.issues) {
+        logger.error("ISSUE", issue.message);
+      }
+
+      logger.error("FATAL", "Invalid configuration file.");
+      process.exit(1);
+    }
+
+    return config.data as unknown as PostmanConfiguration<T>;
   } catch (error) {
     console.error("Error loading configuration:", error);
     throw error;

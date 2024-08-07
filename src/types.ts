@@ -1,3 +1,7 @@
+// src/types/index.ts
+import { z } from "zod";
+import { authSchema } from "./postman-collection-schema";
+
 export interface EnvironmentValue {
   key: string;
   value: string;
@@ -31,7 +35,12 @@ export interface PostmanCollectionConfiguration {
   /**
    * Path to the OpenAPI JSON specification
    */
-  spec: string;
+  in: string;
+
+  /**
+   * Path out to the Postman collection
+   */
+  out: string;
 
   /**
    * Overrides for the collection headers
@@ -44,14 +53,7 @@ export interface PostmanCollectionConfiguration {
    * Set a default auth option for the collection
    * TODO: This might have to support more alternatives in future
    */
-  auth?: {
-    type: "bearer";
-    bearer: Array<{
-      key: string;
-      value: string;
-      type: string;
-    }>;
-  };
+  auth?: z.infer<typeof authSchema>;
 }
 
 export interface PostmanConfiguration<T extends readonly string[]> {
@@ -60,7 +62,9 @@ export interface PostmanConfiguration<T extends readonly string[]> {
    */
   stages: T;
   environment: PostmanEnvironmentConfiguration<T>;
-  collection: PostmanCollectionConfiguration;
+  collection:
+    | PostmanCollectionConfiguration
+    | Array<PostmanCollectionConfiguration>;
 }
 
 export interface PostmanItem {
@@ -75,14 +79,7 @@ export interface PostmanItem {
       key: string;
       value: string;
     }>;
-    auth?: {
-      type: "bearer";
-      bearer: Array<{
-        key: string;
-        value: string;
-        type: string;
-      }>;
-    };
+    auth?: z.infer<typeof authSchema>;
   };
   item?: PostmanItem[];
 }

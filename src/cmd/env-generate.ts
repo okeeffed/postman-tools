@@ -47,7 +47,10 @@ export const envGenerate = new Command("env:generate")
       logger.log("GENERATED", filename);
     }
 
-    logger.log("INFO", "Finished generating environment variables JSON files");
+    logger.log(
+      "COMPLETE",
+      "Finished generating environment variables JSON files"
+    );
   });
 
 /**

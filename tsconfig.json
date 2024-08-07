@@ -11,6 +11,6 @@
     "declarationMap": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "package.json"],
+  "include": ["src/**/*", "package.json", "bin/postman-json-schema.ts"],
   "exclude": ["node_modules", "dist"]
 }

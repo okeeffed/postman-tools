@@ -23,55 +23,61 @@ export const collectionGenerate = new Command("collection:generate")
 
     logger.log("INFO", "Generating Postman collection...");
 
-    const pathToSpec = options.spec ?? config.collection.spec;
+    const collections = Array.isArray(config.collection)
+      ? config.collection
+      : [config.collection];
 
-    if (!pathToSpec) {
-      logger.error("ERROR", "No OpenAPI specification provided");
-      process.exit(1);
-    }
+    for (const collection of collections) {
+      const pathToSpec = options.spec ?? collection.in;
 
-    const openapiDataRaw: string = await readFile(
-      path.join(process.cwd(), pathToSpec),
-      "utf8"
-    );
+      if (!pathToSpec) {
+        logger.error("ERROR", "No OpenAPI specification provided");
+        process.exit(1);
+      }
 
-    const openapiData = JSON.parse(openapiDataRaw);
+      const openapiDataRaw: string = await readFile(
+        path.join(process.cwd(), pathToSpec),
+        "utf8"
+      );
 
-    const postmanConvertOptions: Options = {
-      schemaFaker: false,
-      includeAuthInfoInExample: true,
-    };
+      const openapiData = JSON.parse(openapiDataRaw);
 
-    convert(
-      { type: "string", data: JSON.stringify(openapiData) },
-      postmanConvertOptions,
-      async (err: unknown, result: ConvertResult) => {
-        if (err) {
-          console.error("Could not convert", err);
-        } else {
-          if (result.result) {
-            const postmanCollection = result.output[0]
-              .data as PostmanCollection;
+      const postmanConvertOptions: Options = {
+        schemaFaker: false,
+        includeAuthInfoInExample: true,
+      };
 
-            // Process the collection after conversion
-            if (postmanCollection.item) {
-              postmanCollection.item.forEach((item) =>
-                addDefaultHeaders(item, config.collection)
-              );
-            }
-
-            await writeFile(
-              options.output ?? "postman.collection.json",
-              JSON.stringify(postmanCollection, null, 2)
-            );
+      convert(
+        { type: "string", data: JSON.stringify(openapiData) },
+        postmanConvertOptions,
+        async (err: unknown, result: ConvertResult) => {
+          if (err) {
+            console.error("Could not convert", err);
           } else {
-            logger.error("FAILED", result.reason);
+            if (result.result) {
+              const postmanCollection = result.output[0]
+                .data as PostmanCollection;
+
+              // Process the collection after conversion
+              if (postmanCollection.item) {
+                postmanCollection.item.forEach((item) =>
+                  addDefaultHeaders(item, collection)
+                );
+              }
+
+              const outfile = options.output ?? collection.out;
+              await writeFile(
+                outfile,
+                JSON.stringify(postmanCollection, null, 2)
+              );
+              logger.log("GENERATED", outfile);
+            } else {
+              logger.error("FAILED", result.reason);
+            }
           }
         }
-      }
-    );
-
-    logger.log("INFO", "Finished generating environment variables JSON files");
+      );
+    }
   });
 
 // Add default headers to all requests

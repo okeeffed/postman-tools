@@ -24,7 +24,8 @@ export default {
     ],
   },
   collection: {
-    spec: "tmp/swagger.json",
+    in: "swagger.json",
+    out: "postman.collection.json",
     headers: {
       "x-correlation-id": "{{$guid}}",
       "x-api-key": "{{API_KEY}}",

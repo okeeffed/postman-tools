@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PostmanItem } from "@/types";
+import { authSchema } from "./postman-collection-schema";
 
 // Define and export the EnvironmentValue schema
 export const EnvironmentValueSchema = z.object({
@@ -42,20 +43,10 @@ export function PostmanEnvironmentConfigurationSchema<
 
 // Define and export the PostmanCollectionConfiguration schema
 export const PostmanCollectionConfigurationSchema = z.object({
-  spec: z.string(),
+  in: z.string(),
+  out: z.string(),
   headers: z.record(z.string()).optional(),
-  auth: z
-    .object({
-      type: z.literal("bearer"),
-      bearer: z.array(
-        z.object({
-          key: z.string(),
-          value: z.string(),
-          type: z.string(),
-        })
-      ),
-    })
-    .optional(),
+  auth: authSchema.optional(),
 });
 
 // Define and export the PostmanConfiguration schema
@@ -72,7 +63,9 @@ export function PostmanConfigurationSchema<T extends readonly string[]>(
       }
     ),
     environment: PostmanEnvironmentConfigurationSchema(stages),
-    collection: PostmanCollectionConfigurationSchema,
+    collection: PostmanCollectionConfigurationSchema.or(
+      z.array(PostmanCollectionConfigurationSchema)
+    ),
   });
 }
 
@@ -101,18 +94,7 @@ export const PostmanItemSchema: z.ZodType<PostmanItem> = z.lazy(() =>
             })
           )
           .optional(),
-        auth: z
-          .object({
-            type: z.literal("bearer"),
-            bearer: z.array(
-              z.object({
-                key: z.string(),
-                value: z.string(),
-                type: z.string(),
-              })
-            ),
-          })
-          .optional(),
+        auth: authSchema.optional(),
       })
       .optional(),
     item: z.array(PostmanItemSchema).optional(),
