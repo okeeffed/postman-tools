@@ -42,6 +42,100 @@ export default {
           },
         ],
       },
+      overrides: [
+        {
+          name: "Get Health",
+          request: {
+            auth: {
+              type: "noauth",
+            },
+          },
+        },
+        {
+          name: "Passwords File Sent",
+          request: {
+            auth: {
+              type: "noauth",
+            },
+          },
+        },
+      ],
+      additions: [
+        {
+          name: "v2/token",
+          event: [
+            {
+              listen: "test",
+              script: {
+                exec: [
+                  "var jsonData = pm.response.json();",
+                  'pm.environment.set("ping_token", jsonData.access_token);',
+                  'pm.environment.set("refresh_token", jsonData.refresh_token);',
+                ],
+                type: "text/javascript",
+              },
+            },
+          ],
+          request: {
+            auth: {
+              type: "basic",
+            },
+            method: "POST",
+            header: [
+              {
+                key: "Authorization",
+                value: "{{BASIC_AUTH}}",
+                type: "text",
+              },
+            ],
+            url: {
+              raw: "{{URL}}/v2/token",
+              host: ["{{URL}}"],
+              path: ["v2", "token"],
+            },
+          },
+          response: [],
+        },
+        {
+          name: "Refresh Token",
+          event: [
+            {
+              listen: "test",
+              script: {
+                exec: [
+                  "var jsonData = pm.response.json();",
+                  'pm.environment.set("ping_token", jsonData.access_token);',
+                ],
+                type: "text/javascript",
+              },
+            },
+          ],
+          request: {
+            auth: {
+              type: "noauth",
+            },
+            method: "POST",
+            header: [],
+            body: {
+              mode: "raw",
+              raw: JSON.stringify({
+                refresh_token: "{{refresh_token}}",
+              }),
+              options: {
+                raw: {
+                  language: "json",
+                },
+              },
+            },
+            url: {
+              raw: "{{URL}}/v2/token/refresh",
+              host: ["{{URL}}"],
+              path: ["v2", "token", "refresh"],
+            },
+          },
+          response: [],
+        },
+      ],
     },
   ],
 } satisfies PostmanConfiguration<typeof stages>;

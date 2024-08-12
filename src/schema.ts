@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { authSchema } from "./postman-collection-schema";
+import { authSchema, itemSchema } from "./postman-collection-schema";
 
 // Define and export the EnvironmentValue schema
 export const EnvironmentValueSchema = z.object({
@@ -47,6 +47,8 @@ export const PostmanCollectionConfigurationSchema = z.object({
   baseUrl: z.string().optional(),
   headers: z.record(z.string()).optional(),
   auth: authSchema.optional(),
+  overrides: z.union([z.array(itemSchema), z.record(itemSchema)]).optional(),
+  additions: z.array(itemSchema).optional(),
 });
 
 // Define and export the PostmanConfiguration schema

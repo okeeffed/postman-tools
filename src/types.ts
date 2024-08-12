@@ -67,6 +67,17 @@ export interface PostmanCollectionConfiguration {
    * TODO: This might have to support more alternatives in future
    */
   auth?: z.infer<typeof authSchema>;
+
+  /**
+   * Overrides for the collection items.
+   *
+   * This can either add entire items missing from Swagger
+   * or be used to override existing items.
+   */
+  overrides?:
+    | Array<z.infer<typeof itemSchema>>
+    | Record<string, z.infer<typeof itemSchema>>;
+  additions?: Array<z.infer<typeof itemSchema>>;
 }
 
 export interface PostmanConfiguration<T extends readonly string[]> {
