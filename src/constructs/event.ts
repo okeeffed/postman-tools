@@ -1,6 +1,5 @@
 import { PostmanEvent } from '#types.ts';
 
-
 /**
  * Represents a Postman event.
  */

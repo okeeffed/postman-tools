@@ -1,10 +1,13 @@
 import type { PostmanConfiguration } from "./src/types";
+import { Auth } from './src/constructs/auth.ts'
+import { Request } from './src/constructs/request.ts'
+import { Environment } from './src/constructs/environment.ts'
 
 const stages = ["dev", "stage", "sandbox", "prod"] as const;
 
 export default {
   stages,
-  environment: {
+  environment: new Environment<typeof stages>({
     name: "Example environment",
     values: [
       {
@@ -22,7 +25,7 @@ export default {
         default: "this is a secret",
       },
     ],
-  },
+  }),
   collection: [
     {
       in: "tmp/swagger-alt.json",
@@ -32,7 +35,7 @@ export default {
         "x-correlation-id": "{{$guid}}",
         "x-api-key": "{{API_KEY}}",
       },
-      auth: {
+      auth: new Auth({
         type: "bearer",
         bearer: [
           {
@@ -41,27 +44,27 @@ export default {
             type: "string",
           },
         ],
-      },
+      }),
       overrides: [
-        {
+        new Request({
           name: "Get Health",
           request: {
             auth: {
               type: "noauth",
             },
           },
-        },
-        {
+        }),
+        new Request({
           name: "Passwords File Sent",
           request: {
             auth: {
               type: "noauth",
             },
           },
-        },
+        }),
       ],
       additions: [
-        {
+        new Request({
           name: "v2/token",
           event: [
             {
@@ -95,8 +98,8 @@ export default {
             },
           },
           response: [],
-        },
-        {
+        }),
+        new Request({
           name: "Refresh Token",
           event: [
             {
@@ -134,7 +137,7 @@ export default {
             },
           },
           response: [],
-        },
+        }),
       ],
     },
   ],
