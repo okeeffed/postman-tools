@@ -1,18 +1,20 @@
 {
   "name": "@okeeffed/postman-tools",
   "description": "Helper tools to generate Postman collections and environments",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "main": "dist/index.cjs",
   "module": "./dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.cts",
   "author": "Dennis O'Keeffe",
   "license": "CC-BY-NC-4.0",
   "files": [
     "dist/*.js",
     "dist/*.cjs",
     "dist/*.mjs",
-    "dist/**/*.d.ts"
+    "dist/**/*.d.ts",
+    "dist/**/*.d.cts",
+    "dist/**/*.d.mts"
   ],
   "imports": {
     "#*": "./src/*"
