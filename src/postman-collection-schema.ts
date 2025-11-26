@@ -200,7 +200,7 @@ export const variableSchema = z
   });
 
 // Item Schema
-export const itemSchema: z.ZodType<any> = z.lazy(() =>
+export const itemSchema = z.lazy(() =>
   z.object({
     id: z.string().optional(),
     name: z.string().optional(),
@@ -213,8 +213,17 @@ export const itemSchema: z.ZodType<any> = z.lazy(() =>
   })
 );
 
-// Item Group Schema
-export const itemGroupSchema: z.ZodType<any> = z.lazy(() =>
+interface ItemGroup {
+  name?: string;
+  description?: z.infer<typeof descriptionSchema>;
+  variable?: z.infer<typeof variableSchema>[];
+  item: (z.infer<typeof itemSchema> | ItemGroup)[];
+  event?: z.infer<typeof eventSchema>[];
+  auth?: z.infer<typeof authSchema> | null;
+  protocolProfileBehavior?: Record<string, unknown>;
+}
+
+export const itemGroupSchema: z.ZodType<ItemGroup> = z.lazy(() =>
   z.object({
     name: z.string().optional(),
     description: descriptionSchema.optional(),

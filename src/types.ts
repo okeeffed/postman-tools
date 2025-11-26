@@ -4,6 +4,10 @@ import {
   authSchema,
   collectionSchema,
   itemSchema,
+  itemGroupSchema,
+  eventSchema,
+  requestSchema,
+  responseSchema,
 } from "#postman-collection-schema.ts";
 
 export interface EnvironmentValue {
@@ -12,6 +16,15 @@ export interface EnvironmentValue {
   type: "default" | "secret";
   enabled: true;
 }
+
+export type PostmanItem = z.infer<typeof itemSchema>;
+export type PostmanItemGroup = z.infer<typeof itemGroupSchema>;
+export type PostmanItemOrGroup = PostmanItem | PostmanItemGroup;
+export type PostmanCollection = z.infer<typeof collectionSchema>;
+export type PostmanAuth = z.infer<typeof authSchema>
+export type PostmanEvent = z.infer<typeof eventSchema>
+export type PostmanRequest = z.infer<typeof requestSchema>
+export type PostmanResponse = z.infer<typeof responseSchema>
 
 export type PostmanEnvironmentVariable<T extends readonly string[]> = {
   key: EnvironmentValue["key"];
@@ -66,7 +79,7 @@ export interface PostmanCollectionConfiguration {
    * Set a default auth option for the collection
    * TODO: This might have to support more alternatives in future
    */
-  auth?: z.infer<typeof authSchema>;
+  auth?: PostmanAuth;
 
   /**
    * Overrides for the collection items.
@@ -75,9 +88,9 @@ export interface PostmanCollectionConfiguration {
    * or be used to override existing items.
    */
   overrides?:
-  | Array<z.infer<typeof itemSchema>>
-  | Record<string, z.infer<typeof itemSchema>>;
-  additions?: Array<z.infer<typeof itemSchema>>;
+  | Array<PostmanItem>
+  | Record<string, PostmanItem>;
+  additions?: Array<PostmanItem>;
 }
 
 export interface PostmanConfiguration<T extends readonly string[]> {
@@ -91,5 +104,4 @@ export interface PostmanConfiguration<T extends readonly string[]> {
   | Array<PostmanCollectionConfiguration>;
 }
 
-export type PostmanItem = z.infer<typeof itemSchema>;
-export type PostmanCollection = z.infer<typeof collectionSchema>;
+

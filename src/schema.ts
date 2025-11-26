@@ -42,7 +42,7 @@ export function PostmanEnvironmentConfigurationSchema<
 
 // Define and export the PostmanCollectionConfiguration schema
 export const PostmanCollectionConfigurationSchema = z.object({
-  in: z.string(),
+  in: z.string().optional(),
   out: z.string(),
   baseUrl: z.string().optional(),
   headers: z.record(z.string(), z.string()).optional(),
