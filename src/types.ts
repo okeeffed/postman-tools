@@ -50,9 +50,9 @@ export interface PostmanEnvironmentConfiguration<T extends readonly string[]> {
 
 export interface PostmanCollectionConfiguration {
   /**
-   * Path to the OpenAPI JSON specification
+   * Path to the OpenAPI JSON specification (optional if using additions only)
    */
-  in: string;
+  in?: string;
 
   /**
    * Path out to the Postman collection
