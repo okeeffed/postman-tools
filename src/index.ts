@@ -1,3 +1,3 @@
-export * from "./types";
-export * from "./schema";
-export * from "./config";
+export * from "#types.ts";
+export * from "#schema.ts";
+export * from "#config.ts";

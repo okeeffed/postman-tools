@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { program } from "@commander-js/extra-typings";
-import { init } from "@/cmd/init";
-import { envGenerate } from "@/cmd/env-generate";
-import { collectionGenerate } from "@/cmd/collection-generate";
+import { init } from "#cmd/init.ts";
+import { envGenerate } from "#cmd/env-generate.ts";
+import { collectionGenerate } from "#cmd/collection-generate.ts";
 
-import packageJson from "../package.json";
+import packageJson from "../package.json" with {type: 'json'};
 
 async function main() {
   program

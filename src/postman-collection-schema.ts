@@ -209,7 +209,7 @@ export const itemSchema: z.ZodType<any> = z.lazy(() =>
     event: z.array(eventSchema).optional(),
     request: requestSchema,
     response: z.array(responseSchema).optional(),
-    protocolProfileBehavior: z.record(z.any()).optional(),
+    protocolProfileBehavior: z.record(z.string(), z.any()).optional(),
   })
 );
 
@@ -222,7 +222,7 @@ export const itemGroupSchema: z.ZodType<any> = z.lazy(() =>
     item: z.array(z.union([itemSchema, itemGroupSchema])),
     event: z.array(eventSchema).optional(),
     auth: authSchema.nullable().optional(),
-    protocolProfileBehavior: z.record(z.any()).optional(),
+    protocolProfileBehavior: z.record(z.string(), z.any()).optional(),
   })
 );
 
@@ -253,5 +253,5 @@ export const collectionSchema = z.object({
   event: z.array(eventSchema).optional(),
   variable: z.array(variableSchema).optional(),
   auth: authSchema.nullable().optional(),
-  protocolProfileBehavior: z.record(z.any()).optional(),
+  protocolProfileBehavior: z.record(z.string(), z.any()).optional(),
 });

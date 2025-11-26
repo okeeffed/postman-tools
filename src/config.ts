@@ -1,10 +1,10 @@
 // configLoader.ts
 import { cosmiconfig } from "cosmiconfig";
 
-import { PostmanConfigurationSchema } from "@/schema";
-import type { PostmanConfiguration } from "@/types";
+import { PostmanConfigurationSchema } from "#schema.ts";
+import type { PostmanConfiguration } from "#types.ts";
 import { TypeScriptLoader } from "cosmiconfig-typescript-loader";
-import { logger } from "@/util/logger";
+import { logger } from "#util/logger.ts";
 
 export async function loadConfig<T extends readonly string[]>(): Promise<
   PostmanConfiguration<T>

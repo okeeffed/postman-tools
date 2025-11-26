@@ -1,16 +1,21 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "dist/types",
-    "baseUrl": ".",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
     "paths": {
-      "@/*": ["src/*"]
-    },
-    "declarationMap": true,
-    "resolveJsonModule": true
+      "#*": [
+        "./src/*"
+      ]
+    }
   },
-  "include": ["src/**/*", "package.json", "bin/postman-json-schema.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+  ]
 }

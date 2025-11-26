@@ -1,12 +1,12 @@
 import { Command } from "@commander-js/extra-typings";
 import { readFile, writeFile } from "node:fs/promises";
-import { loadConfig } from "@/config";
+import { loadConfig } from "#config.ts";
 import type {
   PostmanCollection,
   PostmanCollectionConfiguration,
   PostmanItem,
-} from "@/types";
-import { logger } from "@/util/logger";
+} from "#types.ts";
+import { logger } from "#util/logger.ts";
 import path from "node:path";
 import { ConvertResult, convert, Options } from "openapi-to-postmanv2";
 

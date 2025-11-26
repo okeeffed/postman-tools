@@ -4,7 +4,7 @@ import {
   authSchema,
   collectionSchema,
   itemSchema,
-} from "./postman-collection-schema";
+} from "#postman-collection-schema.ts";
 
 export interface EnvironmentValue {
   key: string;
@@ -75,8 +75,8 @@ export interface PostmanCollectionConfiguration {
    * or be used to override existing items.
    */
   overrides?:
-    | Array<z.infer<typeof itemSchema>>
-    | Record<string, z.infer<typeof itemSchema>>;
+  | Array<z.infer<typeof itemSchema>>
+  | Record<string, z.infer<typeof itemSchema>>;
   additions?: Array<z.infer<typeof itemSchema>>;
 }
 
@@ -87,8 +87,8 @@ export interface PostmanConfiguration<T extends readonly string[]> {
   stages: T;
   environment: PostmanEnvironmentConfiguration<T>;
   collection:
-    | PostmanCollectionConfiguration
-    | Array<PostmanCollectionConfiguration>;
+  | PostmanCollectionConfiguration
+  | Array<PostmanCollectionConfiguration>;
 }
 
 export type PostmanItem = z.infer<typeof itemSchema>;

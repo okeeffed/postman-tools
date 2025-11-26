@@ -1,16 +1,16 @@
 import { Command } from "@commander-js/extra-typings";
 import { writeFile } from "node:fs/promises";
 
-import { loadConfig } from "@/config";
+import { loadConfig } from "#config.ts";
 import type {
   EnvironmentValue,
   PostmanEnvironmentFile,
   PostmanEnvironmentVariable,
-} from "@/types";
+} from "#types.ts";
 
 import { camelCase } from "es-toolkit";
 import { v4 } from "uuid";
-import { logger } from "@/util/logger";
+import { logger } from "#util/logger.ts";
 import path from "node:path";
 
 export const envGenerate = new Command("env:generate")
