@@ -1,5 +1,5 @@
 import { Command } from "@commander-js/extra-typings";
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import process from "node:process";
 import { logger } from "#util/logger.ts";
